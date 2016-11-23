@@ -18,7 +18,7 @@ import java.util.ArrayList;
  */
 public class Application {
     public  void Chrome() {
-        String exePath = "C:\\Selenium\\chromedriver_win32\\chromedriver.exe";
+        String exePath = "/Users/path/Downloads/chromedriver";
         System.setProperty("webdriver.chrome.driver", exePath);
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--start-maximized");
@@ -35,35 +35,36 @@ public class Application {
         waiting.until(ExpectedConditions.presenceOfElementLocated(By.id("resultados-busqueda")));
 
         // Paso 3 buscar el elemento ver más
-        WebElement elementoMas = driver.findElement(By.xpath("//span[@class='mas']"));
+        WebElement elementoMas = driver.findElement(By.xpath("//*[@id=\"filterMenuLateral\"]/div/div/div[17]"));
         elementoMas.click();
 
         // Paso 4 Cerrar la ventana de cookies
-        driver.findElement(By.cssSelector(".btn.btn-block.btn-secondary.m-t-1.acceptcookie")).click();
+        //driver.findElement(By.cssSelector(".btn.btn-block.btn-secondary.m-t-1.acceptcookie")).click();
 
         // Paso 5 esperar a que salga el radio botón de LG y hacer scroll
-        waiting = new WebDriverWait(driver, 10);
-        waiting.until( ExpectedConditions.presenceOfElementLocated( By.xpath("//a[@dataid='3']"))
-        );
-        WebElement element = driver.findElement(By.xpath("//a[@data-id='3']"));
+        /*waiting = new WebDriverWait(driver, 10);
+        waiting.until( ExpectedConditions.presenceOfElementLocated( By.xpath("//a[@dataid='3']")));*/
+
+        //Elemento LG
+        WebElement element = driver.findElement(By.xpath("//*[@id=\"acc-fil-0\"]/div/ul/li[3]/a"));
         Actions actions = new Actions(driver);
         actions.moveToElement(element);
         actions.perform();
-        JavascriptExecutor jse = (JavascriptExecutor)driver;
-        jse.executeScript("window.scrollBy(0,100)", "");
+        //JavascriptExecutor jse = (JavascriptExecutor)driver;
+        //jse.executeScript("window.scrollBy(0,100)", "");
 
         // Paso 6 pulsar sobre el radio botón de los teléfonos LG
         element.click();
 
         // Paso 7 esperar a que muestre los telefonos LG
-        waiting = new WebDriverWait(driver, 10);
+        /*waiting = new WebDriverWait(driver, 10);
         waiting.until( ExpectedConditions.presenceOfElementLocated( By.xpath("//a[@databrand='LG']")
-        ));
+        ));*/
 
         // Paso 8 Obtener todos los elementos que aparecen en la primera página
         ArrayList<WebElement> resultados2= (ArrayList<WebElement>)
                 driver.findElements(
-                        By.xpath("//*[contains(@class, 'tarjeta-articulo expandible')]"));
+                        By.xpath("//*[@id=\"articleListContent\"]/div"));
         System.out.println("Resultados " + resultados2.size());
 
         // Paso 9 Iterar sobre la lista para obtener las características de los artículos
