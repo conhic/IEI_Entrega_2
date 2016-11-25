@@ -16,16 +16,14 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.ArrayList;
 
-/**
- * Created by Connor on 18/11/2016.
- */
 public class Application {
-    private final String exePath = "C:\\Selenium\\chromedriver_win32\\chromedriver.exe";
+    private final String exePath = "/Users/path/Downloads/chromedriver";
 
     private PcComponentes pcComponentes = new PcComponentes(exePath);
+    private Fnac fnac = new Fnac(exePath);
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         Application app = new Application();
-        app.pcComponentes.find();
+        app.fnac.find("LG");
     }
 }
