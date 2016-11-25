@@ -2,6 +2,7 @@ package es.upv.iei.view;/**
  * Created by Connor on 25/11/2016.
  */
 
+import es.upv.iei.application.Fnac;
 import es.upv.iei.application.Mobile;
 import es.upv.iei.application.PcComponentes;
 import es.upv.iei.application.Search;
@@ -37,19 +38,8 @@ public class ApplicationView implements Initializable {
     private Search logic = new Search();
 
 
-    public void rellenarCb(){
-        ObservableList<String> options =
-                FXCollections.observableArrayList(
-                        "APPLE",
-                        "HUAWEI",
-                        "LENOVO",
-                        "LG",
-                        "MOTOROLA",
-                        "ONEPLUS",
-                        "SAMSUNG",
-                        "SONY"
-                );
-
+    public void init(){
+        ObservableList<String> options = FXCollections.observableArrayList("SAMSUNG", "LG", "SONY", "HUAWEI", "MOTOROLA", "ONEPLUS", "LENOVO", "APPLE");
         comboBox.setItems(options);
     }
 
@@ -71,7 +61,7 @@ public class ApplicationView implements Initializable {
             list.addAll(logic.find(model, new PcComponentes()));
         }
         if(fnac.isSelected()){
-            //list.addAll(logic.find(model, new Fnac()));
+            list.addAll(logic.find(model, new Fnac()));
         }
 
         fillTableView(list);
@@ -79,6 +69,6 @@ public class ApplicationView implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        rellenarCb();
+        init();
     }
 }

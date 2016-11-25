@@ -15,14 +15,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class Fnac {
+public class Fnac implements Filtro{
 
     private String exePath;
     private WebDriver driver;
 
     public Fnac(){}
 
-    public void find(String model_name) {
+    public List<Mobile> find(String model_name) {
         String exePath = "/Users/path/Downloads/chromedriver";
         System.setProperty("webdriver.chrome.driver", exePath);
         ChromeOptions options = new ChromeOptions();
@@ -86,15 +86,15 @@ public class Fnac {
         jse.executeScript("window.scrollBy(0,100)", "");
 
         String price="";
-
+        List<Mobile> list_mobile = new ArrayList<>();
         while(more_button.isDisplayed()){
             try {
                 WaitForAjax();
                 //coger parametros de los moviles por cada pagina
-                ArrayList<WebElement> results = new ArrayList<>();
+                List<WebElement> results = new ArrayList<>();
                 results.addAll(driver.findElements(By.className("Article-itemGroup")));
 
-                for (int i=0; i<results.size(); i++) 
+                for (int i=0; i<results.size(); i++)
                 {
                     WebElement current_element = results.get(i); // elemento actual de la lista
 
@@ -104,6 +104,9 @@ public class Fnac {
                          price = current_element.findElement(By.xpath(".//div[3]/div/div[2]/div/div[1]/a")).getText();
                     }catch(Exception e){}
 
+                    Mobile mobile = new Mobile(name, price);
+                    list_mobile.add(mobile);
+
                     System.out.println("name: " + name + "price: " + price);
                 }
                 //next page
@@ -111,6 +114,7 @@ public class Fnac {
             }catch(Exception e) {}
         }
         driver.quit();
+        return list_mobile;
     }
 
     public void WaitForAjax() throws InterruptedException {
