@@ -11,98 +11,91 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Connor on 25/11/2016.
  */
-public class PcComponentes {
-    private String exePath;
+public class PcComponentes implements Filtro{
+    private final String website = "https://www.pccomponentes.com/smartphone-moviles-";
+    private final String exePath = "C:\\Selenium\\chromedriver_win32\\chromedriver.exe";
 
-    public PcComponentes(String exePath){
-        this.exePath = exePath;
-    }
+    public List<Mobile> find(String model){
+        String suffix;
 
-    public void find(){
+        switch (model){
+            case "LG":
+                suffix = "lg";
+                break;
+            case "SAMSUNG":
+                suffix = "samsung";
+                break;
+            case "SONY":
+                suffix = "sony";
+                break;
+            case "HUAWEI":
+                suffix = "huawei";
+                break;
+            case "MOTOROLA":
+                suffix = "motorola";
+                break;
+            case "ONEPLUS":
+                suffix = "oneplus";
+                break;
+            case "LENOVO":
+                suffix = "lenovo";
+                break;
+            case "APPLE":
+                suffix = "apple";
+                break;
+            default:
+                throw new Error("Este modelo no existe");
+        }
+
         System.setProperty("webdriver.chrome.driver", exePath);
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--start-maximized");
         WebDriver driver = new ChromeDriver(options);
-        driver.get("http://www.pccomponentes.com");
-
-        //Paso 1 introducir la cadena de búsqueda
-        String searchText = "Móviles\n";
-        WebElement searchInputBox = driver.findElement(By.name("query"));
-        searchInputBox.sendKeys(searchText);
-
-        //Paso 2 esperar a los resultados de búsqueda
-        WebDriverWait waiting = new WebDriverWait(driver, 10);
-        waiting.until(ExpectedConditions.presenceOfElementLocated(By.id("resultados-busqueda")));
+        driver.get(website + suffix);
 
         // Paso 3 Cerrar la ventana de cookies
-        driver.findElement(By.xpath("//*[@id=\"resultados-busqueda\"]/div[5]/div/div/div[2]/button")).click();
+        driver.findElement(By.xpath("//*[@id=\"familia-secundaria\"]/div[5]/div/div/div[2]/button")).click();
 
         // Paso 4 buscar y pulsar el elemento ver más
-        WebElement elementoMas = driver.findElement(By.xpath("//*[@id=\"filterMenuLateral\"]/div/div/div[11]/a"));
-        Actions actions = new Actions(driver);
-        actions.moveToElement(elementoMas); //moverse hacia ver más
-        actions.perform();
         JavascriptExecutor jse = (JavascriptExecutor)driver;
-        jse.executeScript("window.scrollBy(0,100)", "");
-        elementoMas.click();
 
-        // Paso 5 esperar a que salga el radio botón de LG y hacer scroll
-        //waiting = new WebDriverWait(driver, 20);
-        //waiting.until( ExpectedConditions.presenceOfElementLocated( By.xpath("//*[@id=\"acc-fil-0\"]/div/ul/li[3]/a")));
+        WebElement btnMas = driver.findElement(By.id("btnMore"));
+        Actions action = new Actions(driver);
 
-        //Paso 5 Pulsar elemento ver más
-        WebElement element = driver.findElement(By.xpath("//*[@id=\"acc-fil-0\"]/div/a"));
-        actions.moveToElement(element); //moverse hacia ver más
-        actions.perform();
-        jse.executeScript("window.scrollBy(0,100)", "");
-        element.click(); // hacer click
+        while(btnMas.isDisplayed()){
+            action.moveToElement(btnMas);
+            action.perform();
 
-        //Paso 5 Pulsar elemento LG
-        element = driver.findElement(By.xpath("//*[@id=\"acc-fil-0\"]/div/ul/li[3]/a"));
-        actions = new Actions(driver);
-        actions.moveToElement(element); //moverse hacia LG
-        actions.perform();
-        jse = (JavascriptExecutor)driver;
-        jse.executeScript("window.scrollBy(0,100)", "");
-        element.click(); // hacer click
+            jse.executeScript("window.scrollBy(0,100)", "");
+            btnMas.click();
 
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        };
 
-        // Paso 7 esperar a que muestre los telefonos LG
-        waiting = new WebDriverWait(driver, 10);
-        waiting.until(ExpectedConditions.presenceOfElementLocated( By.xpath("//a[@data-id='3']")));
+        //Guardar webelements correspondientes a los móviles de la busqueda
+        List<WebElement> mobiles = new ArrayList<>();
+        mobiles = driver.findElements(By.className("tarjeta-articulo"));
 
-        // Paso 8 Obtener todos los elementos que aparecen en la primera página
-        ArrayList<WebElement> resultados2= (ArrayList<WebElement>)
-                driver.findElements(
-                        By.xpath("//*[@id=\"articleListContent\"]/div"));
+        //Iterar la lista de móviles y crear una lista de objetos Mobile.
+        List<Mobile> result = new ArrayList<>();
+        for(WebElement webElement : mobiles){
+            WebElement filter = webElement.findElement(By.xpath("div/a[@itemprop='url']"));
+            Mobile mobile = new Mobile( filter.getAttribute("data-name"),
+                                        filter.getAttribute("data-price"));
 
-        System.out.println("Resultados " + resultados2.size());
-
-        // Paso 9 Iterar sobre la lista para obtener las características de los artículos
-        WebElement actual_Elemento, navegacion2;
-        for (int i=0; i< resultados2.size(); i++)
-        {
-            actual_Elemento = resultados2.get(i); // elemento actual de la lista.
-            System.out.println("Elemento: " + i);
-            navegacion2 =actual_Elemento.findElement(By.xpath("./descendant::a"));
-            System.out.println("Por navegación2: " + navegacion2.getAttribute("data-name").toString());
-            System.out.println("Por navegación2: " + navegacion2.getAttribute("data-price").toString() );
-            System.out.println("Qué nodo :" + navegacion2.toString());
-
-            // de forma equivalente a xpath pero con css
-            //navegacion2 = actual_Elemento.findElement(By.cssSelector());
-            //System.out.println("Qué nodo :" +navegacion2.toString());
-            //System.out.println("Por navegación2: " + navegacion2.getAttribute("data-name").toString());
-            //System.out.println("Por navegación2: " + navegacion2.getAttribute("data-price").toString() );
-
-            // si está disponible o no, se buscar en tarjeta-articulo__elementos-adicionales
-            navegacion2 = actual_Elemento.findElement(By.xpath("//*[@id=\"articleListContent\"]/div/div[1]/article/div/div[3]"));
-            System.out.println("Por navegación 2 " + navegacion2.getText()); // el texto indica si está disponible o no
-            System.out.println("-------------------------------------------");
+            result.add(mobile);
         }
+
+        //Return lista de móviles
+        return result;
     }
 }

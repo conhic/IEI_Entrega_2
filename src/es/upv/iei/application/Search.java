@@ -15,17 +15,18 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Connor on 18/11/2016.
  */
-public class Application {
-    private final String exePath = "C:\\Selenium\\chromedriver_win32\\chromedriver.exe";
-
-    private PcComponentes pcComponentes = new PcComponentes(exePath);
+public class Search {
+    public List<Mobile> find(String model, Filtro filtro){
+        return filtro.find(model);
+    }
 
     public static void main(String[] args){
-        Application app = new Application();
-        app.pcComponentes.find();
+        Search app = new Search();
+        app.find("APPLE", new PcComponentes());
     }
 }
