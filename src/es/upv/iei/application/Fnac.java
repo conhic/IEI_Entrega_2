@@ -20,13 +20,11 @@ public class Fnac {
     private String exePath;
     private WebDriver driver;
 
-    public Fnac(String exePath){
-        this.exePath = exePath;
-
-    }
+    public Fnac(){}
 
     public void find(String model_name) {
-        System.setProperty("webdriver.chrome.driver", this.exePath);
+        String exePath = "/Users/path/Downloads/chromedriver";
+        System.setProperty("webdriver.chrome.driver", exePath);
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--start-maximized");
         driver = new ChromeDriver(options);
@@ -87,42 +85,31 @@ public class Fnac {
         JavascriptExecutor jse = (JavascriptExecutor)driver;
         jse.executeScript("window.scrollBy(0,100)", "");
 
+        String price="";
+
         while(more_button.isDisplayed()){
             try {
                 WaitForAjax();
                 //coger parametros de los moviles por cada pagina
-                List<WebElement> moviles = new ArrayList<>();
-                moviles.addAll(driver.findElements(By.className("Article-itemGroup")));
-                System.out.println(moviles.size());
-                for (int i=0; i< moviles.size(); i++)
+                ArrayList<WebElement> results = new ArrayList<>();
+                results.addAll(driver.findElements(By.className("Article-itemGroup")));
+
+                for (int i=0; i<results.size(); i++)
                 {
-                    WebElement current_element = moviles.get(i); // elemento actual de la lista
+                    WebElement current_element = results.get(i); // elemento actual de la lista
+
                     String name = current_element.findElement(By.xpath(".//div[2]/div/p[1]/a")).getText();
-                    String price = current_element.findElement(By.xpath(".//div[3]/div/div[2]/div/div[1]/a")).getText();
+
+                    try {
+                         price = current_element.findElement(By.xpath(".//div[3]/div/div[2]/div/div[1]/a")).getText();
+                    }catch(Exception e){}
+
                     System.out.println("name: " + name + "price: " + price);
                 }
                 //next page
                 more_button.click();
             }catch(Exception e) {}
         }
-
-            //2.4 recoger los elementos de última página
-        //results.addAll(driver.findElements(By.className("Article-itemGroup")));
-        //System.out.println("Resultados " + results.size());
-
-        //Paso 3 Iterar sobre la lista para obtener las características de los artículos
-//        WebElement current_element;
-//        String name, price;
-//        for (int i=0; i< results.size(); i++)
-//        {
-//            current_element = results.get(i); // elemento actual de la lista
-//            System.out.println(current_element.getLocation());
-//
-//            name = current_element.findElement(By.xpath(".//div[2]/div/p[1]/a")).getText();
-//            //price = current_element.findElement(By.xpath(".//div[3]/div/div[2]/div/div[1]/a")).getText();
-//            //System.out.println("name: " + we.getText() + "price: " );
-//            //System.out.println("-------------------------------------------");
-//        }
         driver.quit();
     }
 

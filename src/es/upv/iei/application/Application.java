@@ -17,13 +17,12 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.util.ArrayList;
 
 public class Application {
-    private final String exePath = "/Users/path/Downloads/chromedriver";
 
-    private PcComponentes pcComponentes = new PcComponentes(exePath);
-    private Fnac fnac = new Fnac(exePath);
+    //private PcComponentes pcComponentes = new PcComponentes();
+    private Fnac fnac = new Fnac();
 
     public static void main(String[] args) {
         Application app = new Application();
-        app.fnac.find("LG");
+        app.fnac.find("APPLE");
     }
 }
