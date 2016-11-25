@@ -24,9 +24,4 @@ public class Search {
     public List<Mobile> find(String model, Filtro filtro){
         return filtro.find(model);
     }
-
-    public static void main(String[] args){
-        Search app = new Search();
-        app.find("APPLE", new PcComponentes());
-    }
 }
