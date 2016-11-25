@@ -20,15 +20,14 @@ import java.util.ArrayList;
  * Created by Connor on 18/11/2016.
  */
 public class Application {
-    public  void Chrome() {
-        String exePath = "/Users/path/Downloads/chromedriver";
+    public  void chromeFnac() {
+        //String exePath = "/Users/path/Downloads/chromedriver";
+        String exePath = "C:\\Selenium\\chromedriver_win32\\chromedriver";
         System.setProperty("webdriver.chrome.driver", exePath);
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--start-maximized");
         WebDriver driver = new ChromeDriver(options);
-        //driver.get("http://www.pccomponentes.com");
         driver.get("http://www.fnac.es");
-
 
         //Paso 1 clickar SmartPhone y Conectados
         WebElement elementoSmartPhone = driver.findElement(By.xpath("/html/body/div[3]/div/div[1]/div/div[8]/a"));
@@ -97,13 +96,16 @@ public class Application {
         //driver.quit();
     }
 
-    public static void main(String[] args){
-        Application app = new Application();
-        app.Chrome();
-    }
-}
+    public void chromePcComponentes(){
+        //String exePath = "/Users/path/Downloads/chromedriver";
+        String exePath = "C:\\Selenium\\chromedriver_win32\\chromedriver.exe";
+        System.setProperty("webdriver.chrome.driver", exePath);
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--start-maximized");
+        WebDriver driver = new ChromeDriver(options);
+        driver.get("http://www.pccomponentes.com");
 
-/* //Paso 1 introducir la cadena de búsqueda
+        //Paso 1 introducir la cadena de búsqueda
         String searchText = "Móviles\n";
         WebElement searchInputBox = driver.findElement(By.name("query"));
         searchInputBox.sendKeys(searchText);
@@ -112,12 +114,17 @@ public class Application {
         WebDriverWait waiting = new WebDriverWait(driver, 10);
         waiting.until(ExpectedConditions.presenceOfElementLocated(By.id("resultados-busqueda")));
 
-        // Paso 3 buscar y pulsar el elemento ver más
-        WebElement elementoMas = driver.findElement(By.xpath("//*[@id=\"filterMenuLateral\"]/div/div/div[17]"));
-        elementoMas.click();
-
-        // Paso 4 Cerrar la ventana de cookies
+        // Paso 3 Cerrar la ventana de cookies
         driver.findElement(By.xpath("//*[@id=\"resultados-busqueda\"]/div[5]/div/div/div[2]/button")).click();
+
+        // Paso 4 buscar y pulsar el elemento ver más
+        WebElement elementoMas = driver.findElement(By.xpath("//*[@id=\"filterMenuLateral\"]/div/div/div[11]/a"));
+        Actions actions = new Actions(driver);
+        actions.moveToElement(elementoMas); //moverse hacia ver más
+        actions.perform();
+        JavascriptExecutor jse = (JavascriptExecutor)driver;
+        jse.executeScript("window.scrollBy(0,100)", "");
+        elementoMas.click();
 
         // Paso 5 esperar a que salga el radio botón de LG y hacer scroll
         //waiting = new WebDriverWait(driver, 20);
@@ -125,10 +132,8 @@ public class Application {
 
         //Paso 5 Pulsar elemento ver más
         WebElement element = driver.findElement(By.xpath("//*[@id=\"acc-fil-0\"]/div/a"));
-        Actions actions = new Actions(driver);
         actions.moveToElement(element); //moverse hacia ver más
         actions.perform();
-        JavascriptExecutor jse = (JavascriptExecutor)driver;
         jse.executeScript("window.scrollBy(0,100)", "");
         element.click(); // hacer click
 
@@ -174,4 +179,11 @@ public class Application {
             navegacion2 = actual_Elemento.findElement(By.xpath("//*[@id=\"articleListContent\"]/div/div[1]/article/div/div[3]"));
             System.out.println("Por navegación 2 " + navegacion2.getText()); // el texto indica si está disponible o no
             System.out.println("-------------------------------------------");
-        }*/
+        }
+    }
+
+    public static void main(String[] args){
+        Application app = new Application();
+        app.chromePcComponentes();
+    }
+}
