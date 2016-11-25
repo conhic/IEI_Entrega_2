@@ -94,7 +94,7 @@ public class Fnac {
                 ArrayList<WebElement> results = new ArrayList<>();
                 results.addAll(driver.findElements(By.className("Article-itemGroup")));
 
-                for (int i=0; i<results.size(); i++)
+                for (int i=0; i<results.size(); i++) 
                 {
                     WebElement current_element = results.get(i); // elemento actual de la lista
 
